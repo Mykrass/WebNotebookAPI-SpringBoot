@@ -13,7 +13,7 @@
     <distributionManagement>
         <repository>
             <uniqueVersion>false</uniqueVersion>
-            <id>messenger</id>
+            <id>mavenLocal</id>
             <name>Messenger Releases</name>
             <url>file:"C:\Users\alexkras\Desktop\MavenLocal"</url>
             <layout>default</layout>
@@ -22,7 +22,7 @@
 
     <repositories>
         <repository>
-            <id>messenger</id>
+            <id>mavenLocal</id>
             <url>file:"C:\Users\alexkras\Desktop\MavenLocal"</url>
         </repository>
     </repositories>
@@ -71,5 +71,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.16.6.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
