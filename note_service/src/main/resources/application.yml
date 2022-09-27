@@ -8,7 +8,7 @@ spring:
       repositories:
         enabled: true
   datasource:
-    url: jdbc:mysql://${mysql-host}/messenger_db
+    url: jdbc:mysql://${mysql-host}/notebook_db
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root
