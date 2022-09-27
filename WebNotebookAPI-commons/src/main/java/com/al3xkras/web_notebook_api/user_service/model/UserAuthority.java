@@ -1,4 +1,4 @@
-package com.al3xkras.web_notebook_api.user_service;
+package com.al3xkras.web_notebook_api.user_service.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
