@@ -15,7 +15,7 @@
             <uniqueVersion>false</uniqueVersion>
             <id>messenger</id>
             <name>Messenger Releases</name>
-            <url>file:C:\Users\Александр\Desktop\MavenLocal</url>
+            <url>file:"C:\Users\alexkras\Desktop\MavenLocal"</url>
             <layout>default</layout>
         </repository>
     </distributionManagement>
@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>messenger</id>
-            <url>file:C:\Users\Александр\Desktop\MavenLocal</url>
+            <url>file:"C:\Users\alexkras\Desktop\MavenLocal"</url>
         </repository>
     </repositories>
 

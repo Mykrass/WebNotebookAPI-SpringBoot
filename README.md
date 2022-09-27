@@ -50,7 +50,6 @@ user privileges:
 -delete a note (authorized)
 -refresh access token (if not banned)
 -share a note
--read shared notes (unauthorized)
 -read self settings (if not banned)
 -modify self settings (if not banned)
 -read/write self profile info (authorized)
