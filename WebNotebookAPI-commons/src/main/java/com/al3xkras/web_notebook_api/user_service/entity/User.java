@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.security.Principal;
 import java.util.Collection;
 
 @Entity
@@ -36,8 +35,8 @@ public class User implements Authentication {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "user_type")
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_type")
     private UserType userType;
 
     @Transient
