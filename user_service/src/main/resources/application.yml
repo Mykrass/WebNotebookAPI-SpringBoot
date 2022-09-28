@@ -24,4 +24,13 @@ spring:
     hibernate:
       ddl-auto: update
   mandatory-file-encoding: UTF-8
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${google-client-id}
+            clientSecret: ${google-client-secret}
+            scope:
+              - email
+              - profile

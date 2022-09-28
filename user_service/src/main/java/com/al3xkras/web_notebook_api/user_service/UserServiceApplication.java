@@ -1,7 +1,5 @@
 package com.al3xkras.web_notebook_api.user_service;
 
-import com.al3xkras.web_notebook_api.notebook_service.entity.Note;
-import com.al3xkras.web_notebook_api.user_service.model.UserAuthority;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
