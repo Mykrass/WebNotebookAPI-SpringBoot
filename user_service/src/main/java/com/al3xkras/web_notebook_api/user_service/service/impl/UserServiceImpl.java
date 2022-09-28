@@ -8,7 +8,9 @@ import com.al3xkras.web_notebook_api.user_service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -19,14 +21,18 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User processOAuthPostLogin(String username) {
-        Optional<User> existing = findByUsername(username);
+    public User processOAuthPostLogin(String emailAddress) {
+        Optional<User> existing = findByUsername(emailAddress);
         if (!existing.isPresent()){
-            User user = new User();
-            user.setUsername(username);
-            user.setProvider(UserDetailsProvider.GOOGLE);
+            User user = User.builder()
+                    .username(emailAddress)
+                    .detailsProvider(UserDetailsProvider.GOOGLE)
+                    .build();
             log.info("Saved new user with google oAuth 2.0: "+user);
             return userRepository.saveAndFlush(user);
+        }
+        if (!existing.get().getDetailsProvider().equals(UserDetailsProvider.GOOGLE)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         return existing.get();
     }

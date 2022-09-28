@@ -73,6 +73,23 @@ class UserRepositoryTest {
         userRepository.saveAndFlush(user2);
         assertEquals(Optional.of(user2),userRepository.findByUsername(user2.getUsername()));
         assertEquals(Optional.empty(),userRepository.findByUsername(user3.getUsername()));
+        userRepository.deleteById(user1.getUserId());
+        assertEquals(Optional.empty(),userRepository.findByUsername(user1.getUsername()));
     }
+
+    @Test
+    @Order(30)
+    void testFindByEmail(){
+        assertEquals(Optional.empty(),userRepository.findByEmail(user2.getEmail()));
+        assertEquals(Optional.empty(),userRepository.findByEmail(user3.getEmail()));
+        user2.setUserId(null);
+        userRepository.saveAndFlush(user2);
+        assertEquals(Optional.of(user2),userRepository.findByEmail(user2.getEmail()));
+        assertEquals(Optional.empty(),userRepository.findByEmail(user3.getEmail()));
+        userRepository.deleteById(user1.getUserId());
+        assertEquals(Optional.empty(),userRepository.findByEmail(user1.getEmail()));
+    }
+
+
 
 }

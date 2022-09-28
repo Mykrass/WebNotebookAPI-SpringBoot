@@ -19,6 +19,7 @@ import java.util.Collection;
         @UniqueConstraint(name = "user_username_un", columnNames = {"username"}),
         @UniqueConstraint(name = "user_email_un", columnNames = {"email"})
 })
+@EqualsAndHashCode
 public class User implements Authentication {
     @Id
     @SequenceGenerator(name = "user_id_seq",initialValue = 1,allocationSize = 1)
@@ -78,4 +79,5 @@ public class User implements Authentication {
     public String getName() {
         return username;
     }
+
 }
