@@ -1,5 +1,7 @@
 package com.al3xkras.web_notebook_api.user_service.model;
 
-public interface UserCredentials {
+import java.io.Serializable;
+
+public interface UserCredentials extends Serializable {
     String getUsername();
 }
