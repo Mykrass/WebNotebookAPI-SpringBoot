@@ -80,4 +80,9 @@ public class User implements Authentication {
         return username;
     }
 
+    @PrePersist
+    void beforePersist(){
+        this.userId=null;
+    }
+
 }

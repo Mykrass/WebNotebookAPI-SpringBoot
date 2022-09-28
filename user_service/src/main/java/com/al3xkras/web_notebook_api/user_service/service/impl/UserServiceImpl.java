@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.saveAndFlush(user);
         } catch (DataIntegrityViolationException e){
-            //TODO check which column causes exception: username or email
-            throw new UsernameExistsException("username already exists");
+            throw new UsernameExistsException("username or email already exists");
         }
     }
 }

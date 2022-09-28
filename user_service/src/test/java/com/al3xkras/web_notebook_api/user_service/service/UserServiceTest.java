@@ -1,7 +1,7 @@
 package com.al3xkras.web_notebook_api.user_service.service;
 
 import com.al3xkras.web_notebook_api.user_service.entity.User;
-import com.al3xkras.web_notebook_api.user_service.model.TestEntities;
+import com.al3xkras.web_notebook_api.user_service.exception.UsernameExistsException;
 import com.al3xkras.web_notebook_api.user_service.model.UserDetailsProvider;
 import com.al3xkras.web_notebook_api.user_service.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +13,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.xml.bind.ValidationException;
 import java.util.Optional;
 
 import static com.al3xkras.web_notebook_api.user_service.model.TestEntities.*;
@@ -70,5 +70,32 @@ class UserServiceTest {
         assertThrows(ResponseStatusException.class,()->{
             userService.processOAuthPostLogin(email2);
         });
+    }
+
+    @Test
+    @Order(10)
+    void testFindByEmailAddress(){
+        Mockito.when(userRepository.findByEmail(user1.getEmail()))
+                .thenReturn(Optional.of(user1));
+        Mockito.when(userRepository.findByEmail(user2.getEmail()))
+                .thenReturn(Optional.empty());
+
+        assertEquals(Optional.of(user1),userService.findByEmailAddress(user1.getEmail()));
+        assertEquals(Optional.empty(),userService.findByEmailAddress(user2.getEmail()));
+    }
+
+    @Test
+    @Order(20)
+    void testSaveUser(){
+        Mockito.when(userRepository.saveAndFlush(user1))
+                .thenReturn(user1);
+        Mockito.when(userRepository.saveAndFlush(user2))
+                .thenThrow(DataIntegrityViolationException.class);
+
+        assertEquals(user1,userService.saveUser(user1));
+        assertThrows(UsernameExistsException.class,()->{
+            userService.saveUser(user2);
+        });
+
     }
 }
