@@ -15,28 +15,30 @@ import java.util.Collection;
 @Getter
 @Setter
 @Builder
-@Table(name = "user", uniqueConstraints = {
+@Table(name = "notebook_user", uniqueConstraints = {
         @UniqueConstraint(name = "user_username_un", columnNames = {"username"}),
         @UniqueConstraint(name = "user_email_un", columnNames = {"email"})
 })
 public class User implements Authentication {
     @Id
-    private long userId;
+    @SequenceGenerator(name = "user_id_seq",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    private Long userId;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     private String username;
     @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "provider")
-    private UserDetailsProvider provider;
+    @Column(name = "details_provider", nullable = false)
+    private UserDetailsProvider detailsProvider;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type")
+    @Column(name = "user_type", nullable = false)
     private UserType userType;
 
     @Transient
@@ -54,7 +56,7 @@ public class User implements Authentication {
 
     @Override
     public Object getDetails() {
-        return provider;
+        return detailsProvider;
     }
 
     @Override
