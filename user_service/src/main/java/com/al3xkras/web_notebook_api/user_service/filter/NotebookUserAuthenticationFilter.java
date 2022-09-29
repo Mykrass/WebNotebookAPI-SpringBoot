@@ -77,6 +77,7 @@ public class NotebookUserAuthenticationFilter extends AbstractAuthenticationProc
             return;
         }
         successfulAuthentication(request,response,chain,user);
+        chain.doFilter(request,response);
     }
 
     @Override

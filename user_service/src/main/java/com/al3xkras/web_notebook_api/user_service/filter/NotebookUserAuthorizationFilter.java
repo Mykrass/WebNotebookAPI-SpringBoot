@@ -17,11 +17,12 @@ public class NotebookUserAuthorizationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         String requestString = "("+method+") "+uri;
-        if (uri.startsWith("/login") || uri.startsWith("/oauth")){
+        if (uri.startsWith("login")){
             filterChain.doFilter(request,response);
             log.warn("Security filter chain skipped for request: "+requestString);
             return;
         }
+        filterChain.doFilter(request,response);
         //TODO implement
     }
 }

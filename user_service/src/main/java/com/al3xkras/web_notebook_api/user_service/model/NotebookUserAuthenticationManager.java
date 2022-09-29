@@ -16,6 +16,6 @@ public class NotebookUserAuthenticationManager implements AuthenticationManager 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return null;
+        return authentication;
     }
 }

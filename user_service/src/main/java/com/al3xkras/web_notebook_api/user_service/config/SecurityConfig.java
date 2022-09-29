@@ -6,8 +6,11 @@ import com.al3xkras.web_notebook_api.user_service.model.NotebookUserAuthenticati
 import com.al3xkras.web_notebook_api.user_service.model.oAuthAuthenticationSuccessHandler;
 import com.al3xkras.web_notebook_api.user_service.service.OAuth2UserService;
 import com.al3xkras.web_notebook_api.user_service.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,9 +19,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import java.util.Arrays;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private Environment environment;
+
 
     @Bean
     public AuthenticationManager authenticationManager(UserService userService){
@@ -32,9 +42,17 @@ public class SecurityConfig {
                                          UserService userService,
                                          PasswordEncoder passwordEncoder) throws Exception {
 
+        if (Arrays.stream(environment.getActiveProfiles()).anyMatch(x->x.startsWith("test"))){
+            http.csrf().and().cors().disable()
+                    .authorizeRequests()
+                    .antMatchers("/**").permitAll();
+            log.warn("Spring security is disabled for tests");
+            return http.build();
+        }
+
         NotebookUserAuthenticationFilter notebookUserAuthenticationFilter = new NotebookUserAuthenticationFilter(authenticationManager,"/login", userService, passwordEncoder);
         NotebookUserAuthorizationFilter notebookUserAuthorizationFilter = new NotebookUserAuthorizationFilter();
-        http.csrf().and().cors().disable()
+        http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/oauth/**").permitAll()
                 .antMatchers("/**").permitAll();

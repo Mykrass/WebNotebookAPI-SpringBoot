@@ -39,9 +39,11 @@ public class UserController {
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .userType(UserType.USER)
                 .email(userDTO.getEmail())
-                .provider(UserDetailsProvider.LOCAL)
+                .detailsProvider(UserDetailsProvider.LOCAL)
                 .build();
-        return ResponseEntity.ok(userService.saveUser(user));
+        User saved = userService.saveUser(user);
+        log.info("saved user: "+saved);
+        return ResponseEntity.ok(saved);
     }
 
 }
