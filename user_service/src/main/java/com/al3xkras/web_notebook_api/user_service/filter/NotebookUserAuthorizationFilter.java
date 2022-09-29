@@ -17,7 +17,8 @@ public class NotebookUserAuthorizationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         String requestString = "("+method+") "+uri;
-        if (uri.startsWith("login")){
+
+        if (NotebookUserAuthenticationFilter.allowedURIs.contains(uri)){
             filterChain.doFilter(request,response);
             log.warn("Security filter chain skipped for request: "+requestString);
             return;

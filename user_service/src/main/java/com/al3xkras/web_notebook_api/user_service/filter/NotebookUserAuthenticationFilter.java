@@ -6,6 +6,7 @@ import com.al3xkras.web_notebook_api.user_service.model.UserDetailsProvider;
 import com.al3xkras.web_notebook_api.user_service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Slf4j
@@ -30,6 +34,10 @@ public class NotebookUserAuthenticationFilter extends AbstractAuthenticationProc
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
+    protected static final HashSet<String> allowedURIs = new HashSet<>(Arrays.asList(
+            "/login","/login/oauth2/google","/favicon.ico","/error"
+    ));
 
     public NotebookUserAuthenticationFilter(AuthenticationManager authenticationManager, String defaultFilterProcessesUrl, UserService userService, PasswordEncoder passwordEncoder) {
         super(defaultFilterProcessesUrl);
@@ -46,10 +54,21 @@ public class NotebookUserAuthenticationFilter extends AbstractAuthenticationProc
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest)req;
         HttpServletResponse response = (HttpServletResponse)res;
+        String uri = request.getRequestURI();
+        HttpMethod method = HttpMethod.valueOf(request.getMethod());
+        String requestString = "("+method+") "+uri;
+
+        log.info(uri);
+        if (allowedURIs.contains(uri)){
+            filterChain.doFilter(request,response);
+            log.warn("Security filter chain skipped for request: "+requestString);
+            return;
+        }
+
         String prov = request.getParameter("provider");
         UserDetailsProvider provider = prov==null?UserDetailsProvider.LOCAL:UserDetailsProvider.valueOf(prov);
 
@@ -76,8 +95,8 @@ public class NotebookUserAuthenticationFilter extends AbstractAuthenticationProc
             unsuccessfulAuthentication(request, response, new AuthenticationException("internal server error"){});
             return;
         }
-        successfulAuthentication(request,response,chain,user);
-        chain.doFilter(request,response);
+        successfulAuthentication(request,response,filterChain,user);
+        filterChain.doFilter(request,response);
     }
 
     @Override
