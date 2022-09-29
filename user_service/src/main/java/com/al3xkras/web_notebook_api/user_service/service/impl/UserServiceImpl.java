@@ -3,6 +3,7 @@ package com.al3xkras.web_notebook_api.user_service.service.impl;
 import com.al3xkras.web_notebook_api.user_service.entity.User;
 import com.al3xkras.web_notebook_api.user_service.exception.UsernameExistsException;
 import com.al3xkras.web_notebook_api.user_service.model.UserDetailsProvider;
+import com.al3xkras.web_notebook_api.user_service.model.UserType;
 import com.al3xkras.web_notebook_api.user_service.repository.UserRepository;
 import com.al3xkras.web_notebook_api.user_service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,9 @@ public class UserServiceImpl implements UserService {
         if (!existing.isPresent()){
             User user = User.builder()
                     .username(emailAddress)
+                    .email(emailAddress)
                     .detailsProvider(UserDetailsProvider.GOOGLE)
+                    .userType(UserType.USER)
                     .build();
             log.info("Saved new user with google oAuth 2.0: "+user);
             return userRepository.saveAndFlush(user);
